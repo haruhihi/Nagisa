@@ -1,4 +1,25 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+const nextConfig = {
+    // or might on mount twice https://stackoverflow.com/questions/71835580/useeffect-being-called-twice-in-nextjs-typescript-app
+    reactStrictMode: false,
+    async redirects() {
+      return [
+        // Basic redirect
+        {
+          source: "/",
+          destination: "/home",
+          // Do not set permanent true, or it will be cached which will cause confusing when you build a new app under this path.
+          permanent: false,
+        },
+      ];
+    },
+    /**
+     * https://github.com/vercel/next.js/discussions/50587#discussioncomment-6134092
+     * Fix sequelize error:
+     */
+    // experimental: {
+    //   serverComponentsExternalPackages: ["sequelize"],
+    // },
+  };
+  
+  export default nextConfig;
