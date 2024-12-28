@@ -6,7 +6,9 @@ import {
   Form,
   Button,
   Input,
+  List,
 } from "antd-mobile";
+import dayjs from "dayjs";
 import { HandPayCircleOutline } from "antd-mobile-icons";
 import { useState } from "react";
 import { useCategories, useTransactions } from "./help";
@@ -36,14 +38,18 @@ export default function App() {
 
   return (
     <div>
-      <div>
+      <List>
         {(transactions ?? []).map((transaction) => (
-          <div key={transaction.id}>
-            {transaction.amount}-{transaction.categoryId}{" "}
-            {transaction.createdAt.valueOf()}
-          </div>
+          <List.Item
+            key={transaction.id}
+            description={dayjs(transaction.createdAt).format("YYYY-MM-DD")}
+          >
+            <div>
+              {transaction.category.name}: {transaction.amount}
+            </div>
+          </List.Item>
         ))}
-      </div>
+      </List>
       <FloatingBubble
         style={{
           "--initial-position-bottom": "100px",
@@ -140,7 +146,7 @@ const FormCascader: React.FC<{
   );
 };
 
-export const getLabelsFromValue = (
+const getLabelsFromValue = (
   options: ICategoryRes["options"],
   value?: string[]
 ) => {

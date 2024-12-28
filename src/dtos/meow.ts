@@ -1,4 +1,5 @@
 import { Transaction } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 interface CategoryOption {
   label: string;
@@ -21,5 +22,9 @@ export interface ITransactionCreateRes {
 }
 
 export interface ITransactionSearchRes {
-  transactions: Transaction[];
+  transactions: Prisma.TransactionGetPayload<{
+    include: {
+      category: true;
+    };
+  }>[];
 }

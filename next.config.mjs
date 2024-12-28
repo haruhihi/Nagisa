@@ -7,7 +7,7 @@ const nextConfig = {
         // Basic redirect
         {
           source: "/",
-          destination: "/meow/home",
+          destination: "/meow/home/bill",
           // Do not set permanent true, or it will be cached which will cause confusing when you build a new app under this path.
           permanent: false,
         },

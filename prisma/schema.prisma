@@ -21,7 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   budgets     Budget[]      @relation("UserBudgets")
-  Transaction Transaction[]
+  Transaction Transaction[] @relation
 }
 
 model Category {
@@ -31,8 +31,8 @@ model Category {
   parent   Category?  @relation("CategoryParent", fields: [parentId], references: [id])
   children Category[] @relation("CategoryParent") // Children categories
 
-  Budget      Budget[]
-  Transaction Transaction[]
+  Budget      Budget[]      @relation
+  Transaction Transaction[] @relation
 }
 
 model Budget {
