@@ -24,7 +24,12 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "@libs/*": [
+        "./src/libs/*"
+      ],
+      "@dtos/*": [
+        "./src/dtos/*"
     },
     "target": "ES2017"
   },

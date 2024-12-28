@@ -7,12 +7,13 @@ const nextConfig = {
         // Basic redirect
         {
           source: "/",
-          destination: "/home",
+          destination: "/meow/home",
           // Do not set permanent true, or it will be cached which will cause confusing when you build a new app under this path.
           permanent: false,
         },
       ];
     },
+    transpilePackages: ['antd-mobile'],
     /**
      * https://github.com/vercel/next.js/discussions/50587#discussioncomment-6134092
      * Fix sequelize error:
