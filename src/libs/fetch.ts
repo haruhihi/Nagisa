@@ -1,11 +1,16 @@
-export const post = async <T extends object>(url: string, params?: T) => {
+export const post = async <T extends object | null, K extends object | null>(
+  url: string,
+  params?: T
+): Promise<K> => {
   const res = await fetch(url, {
     method: "POST",
     body: params ? JSON.stringify(params) : undefined,
   });
   const data = await res.json();
   if (data.success) {
-    return data.result;
+    return data.result as K;
+  } else {
+    throw data;
   }
 };
 

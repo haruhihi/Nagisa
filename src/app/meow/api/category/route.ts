@@ -13,16 +13,15 @@ export async function POST() {
       categories: Category[],
       parentId: number | null = null
     ): ICategoryRes["options"] => {
-      
       return categories
-      .filter((category) => category.parentId === parentId)
-      .map((category) => {
-          const children = buildTree(categories, category.id)
+        .filter((category) => category.parentId === parentId)
+        .map((category) => {
+          const children = buildTree(categories, category.id);
           return {
             label: category.name,
-            value: category.id,
+            value: `${category.id}`,
             children: children.length ? children : undefined,
-          }
+          };
         });
     };
 

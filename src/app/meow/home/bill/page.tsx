@@ -1,28 +1,49 @@
 "use client";
-import { FloatingBubble, Cascader } from "antd-mobile";
+import {
+  FloatingBubble,
+  Cascader,
+  Modal,
+  Form,
+  Button,
+  Input,
+} from "antd-mobile";
 import { HandPayCircleOutline } from "antd-mobile-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useCategories, useTransactions } from "./help";
+import {
+  ICategoryRes,
+  ITransactionCreateReq,
+  ITransactionCreateRes,
+} from "@/dtos/meow";
 import { post } from "@libs/fetch";
-import { ICategoryRes } from "@dtos/meow";
 
 export default function App() {
   const [visible, setVisible] = useState(false);
-  const [options, setOptions] = useState([]);
-
-  useEffect(() => {
-    async function fetchPosts() {
-      const res = await post<ICategoryRes>("/meow/api/category");
-      setOptions(res.options);
-    }
-    fetchPosts();
-  }, []);
+  const [categoryVisible, setCategoryVisible] = useState(false);
+  const categories = useCategories();
+  const { transactions, reQuery } = useTransactions();
 
   const onClick = () => {
     setVisible(true);
+    setCategoryVisible(true);
   };
+
+  if (!categories) {
+    return "Loding...";
+  }
+
+  const { options } = categories;
 
   return (
     <div>
+      <div>
+        {(transactions ?? []).map((transaction) => (
+          <div key={transaction.id}>
+            {transaction.amount}-{transaction.categoryId}{" "}
+            {transaction.createdAt.valueOf()}
+          </div>
+        ))}
+      </div>
       <FloatingBubble
         style={{
           "--initial-position-bottom": "100px",
@@ -34,13 +55,110 @@ export default function App() {
         <HandPayCircleOutline fontSize={32} />
       </FloatingBubble>
 
-      <Cascader
-        options={options}
+      <Modal
         visible={visible}
-        onClose={() => {
-          setVisible(false);
-        }}
-      />
+        closeOnMaskClick
+        content={
+          <Form
+            layout="horizontal"
+            footer={
+              <Button block type="submit" color="primary" size="large">
+                提交
+              </Button>
+            }
+            onFinish={async (values: {
+              amount: string;
+              category: string[];
+            }) => {
+              if (!values) return console.log("values is empty");
+              const { amount, category } = values;
+              const res = await post<
+                ITransactionCreateReq,
+                ITransactionCreateRes
+              >("/meow/api/transaction/create", {
+                amount: Number(amount),
+                categoryId: Number(category[category.length - 1]),
+              });
+              setVisible(false);
+              reQuery();
+              console.log(res);
+            }}
+          >
+            <Form.Item
+              name="category"
+              label="分类"
+              rules={[{ required: true, message: "请选择分类" }]}
+            >
+              <FormCascader
+                options={options}
+                categoryVisible={categoryVisible}
+                setCategoryVisible={(visible: boolean) =>
+                  setCategoryVisible(visible)
+                }
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="amount"
+              label="金额"
+              rules={[{ required: true, message: "金额不能为空" }]}
+            >
+              <Input placeholder="请输入金额" type="number" />
+            </Form.Item>
+          </Form>
+        }
+      ></Modal>
     </div>
   );
 }
+
+const FormCascader: React.FC<{
+  value?: string[];
+  onChange?: (value: unknown) => void;
+  options: ICategoryRes["options"];
+  categoryVisible: boolean;
+  setCategoryVisible: (visiable: boolean) => void;
+}> = (props) => {
+  const {
+    value,
+    onChange = () => {},
+    options,
+    categoryVisible,
+    setCategoryVisible,
+  } = props;
+  console.log(value);
+  return (
+    <div onClick={() => setCategoryVisible(true)}>
+      <div>{getLabelsFromValue(options, value)}</div>
+      <Cascader
+        options={options}
+        visible={categoryVisible}
+        onClose={() => setCategoryVisible(false)}
+        onConfirm={(value) => onChange(value)}
+      />
+    </div>
+  );
+};
+
+export const getLabelsFromValue = (
+  options: ICategoryRes["options"],
+  value?: string[]
+) => {
+  if (!value) {
+    return "请选择类别";
+  }
+  const labels = [];
+  let currentOptions = options;
+
+  for (const val of value) {
+    const option = currentOptions.find((opt) => opt.value === val);
+    if (option) {
+      labels.push(option.label);
+      currentOptions = option.children || [];
+    } else {
+      break;
+    }
+  }
+
+  return labels[labels.length - 1] || "请选择类别";
+};
