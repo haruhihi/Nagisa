@@ -81,7 +81,7 @@ export default function App() {
               const res = await post<
                 ITransactionCreateReq,
                 ITransactionCreateRes
-              >("/meow/api/transaction/create", {
+              >("/api/transaction/create", {
                 amount: Number(amount),
                 categoryId: Number(category[category.length - 1]),
               });

@@ -7,7 +7,7 @@ export const useCategories = () => {
 
   useEffect(() => {
     async function fetchOptions() {
-      const res = await post<null, ICategoryRes>("/meow/api/category");
+      const res = await post<null, ICategoryRes>("/api/category");
       setCategories(res);
     }
     fetchOptions();
@@ -23,7 +23,7 @@ export const useTransactions = () => {
   useEffect(() => {
     async function fetchTransactions() {
       const res = await post<null, ITransactionSearchRes>(
-        "/meow/api/transaction/search"
+        "/api/transaction/search"
       );
       setRes(res);
     }
