@@ -22,24 +22,28 @@ const Bottom: FC = () => {
       icon: <AppOutline />,
     },
     {
-      key: "/meow/home/bill",
+      key: "/meow/bill",
       title: "账单",
       icon: <UnorderedListOutline />,
     },
     {
-      key: "/meow/home/time-machine",
+      key: "/meow/time-machine",
       title: "消息",
       icon: <MessageOutline />,
     },
     {
-      key: "/meow/home/me",
+      key: "/meow/me",
       title: "我的",
       icon: <UserOutline />,
     },
   ];
 
   return (
-    <TabBar activeKey={pathname} onChange={(value) => router.push(value)}>
+    <TabBar
+      activeKey={pathname}
+      onChange={(value) => router.push(value)}
+      safeArea
+    >
       {tabs.map((item) => (
         <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
       ))}
@@ -50,9 +54,9 @@ const Bottom: FC = () => {
 const App: React.FC<{ children: React.ReactNode }> = (props) => {
   return (
     <div className={styles.app}>
-      <div className={styles.top}>
+      {/* <div className={styles.top}>
         <NavBar>Meow</NavBar>
-      </div>
+      </div> */}
       <div className={styles.body}>{props.children}</div>
       <div className={styles.bottom}>
         <Bottom />

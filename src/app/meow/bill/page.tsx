@@ -1,23 +1,11 @@
-"use client";
-import {
-  FloatingBubble,
-  Cascader,
-  Modal,
-  Form,
-  Button,
-  Input,
-  List,
-} from "antd-mobile";
-import dayjs from "dayjs";
-import { HandPayCircleOutline } from "antd-mobile-icons";
-import { useState } from "react";
-import { useCategories, useTransactions } from "./help";
-import {
-  ICategoryRes,
-  ITransactionCreateReq,
-  ITransactionCreateRes,
-} from "@/dtos/meow";
-import { post } from "@libs/fetch";
+'use client';
+import { FloatingBubble, Cascader, Modal, Form, Button, Input, List, SwipeAction, SpinLoading } from 'antd-mobile';
+import dayjs from 'dayjs';
+import { HandPayCircleOutline } from 'antd-mobile-icons';
+import { useState } from 'react';
+import { useCategories, useTransactions } from './help';
+import { ICategoryRes, ITransactionCreateReq, ITransactionCreateRes } from '@/dtos/meow';
+import { post } from '@libs/fetch';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
@@ -30,8 +18,8 @@ export default function App() {
     setCategoryVisible(true);
   };
 
-  if (!categories) {
-    return "Loding...";
+  if (!categories || transactions === undefined) {
+    return <SpinLoading style={{ '--size': '48px' }} color="primary" />;
   }
 
   const { options } = categories;
@@ -40,21 +28,33 @@ export default function App() {
     <div>
       <List>
         {(transactions ?? []).map((transaction) => (
-          <List.Item
+          <SwipeAction
             key={transaction.id}
-            description={dayjs(transaction.createdAt).format("YYYY-MM-DD")}
+            rightActions={[
+              {
+                key: 'unsubscribe',
+                text: '删除',
+                color: 'red',
+                onClick: async () => {
+                  await post('/api/transaction/delete', { ids: [transaction.id] });
+                  reQuery();
+                },
+              },
+            ]}
           >
-            <div>
-              {transaction.category.name}: {transaction.amount}
-            </div>
-          </List.Item>
+            <List.Item key={transaction.id} description={dayjs(transaction.createdAt).format('YYYY-MM-DD')}>
+              <div>
+                {transaction.category.name}: {transaction.amount}
+              </div>
+            </List.Item>
+          </SwipeAction>
         ))}
       </List>
       <FloatingBubble
         style={{
-          "--initial-position-bottom": "100px",
-          "--initial-position-right": "24px",
-          "--edge-distance": "44px",
+          '--initial-position-bottom': '100px',
+          '--initial-position-right': '24px',
+          '--edge-distance': '44px',
         }}
         onClick={onClick}
       >
@@ -64,6 +64,8 @@ export default function App() {
       <Modal
         visible={visible}
         closeOnMaskClick
+        showCloseButton
+        onClose={() => setVisible(false)}
         content={
           <Form
             layout="horizontal"
@@ -72,16 +74,11 @@ export default function App() {
                 提交
               </Button>
             }
-            onFinish={async (values: {
-              amount: string;
-              category: string[];
-            }) => {
-              if (!values) return console.log("values is empty");
+            style={{ marginTop: '20px' }}
+            onFinish={async (values: { amount: string; category: string[] }) => {
+              if (!values) return console.log('values is empty');
               const { amount, category } = values;
-              const res = await post<
-                ITransactionCreateReq,
-                ITransactionCreateRes
-              >("/api/transaction/create", {
+              const res = await post<ITransactionCreateReq, ITransactionCreateRes>('/api/transaction/create', {
                 amount: Number(amount),
                 categoryId: Number(category[category.length - 1]),
               });
@@ -90,25 +87,11 @@ export default function App() {
               console.log(res);
             }}
           >
-            <Form.Item
-              name="category"
-              label="分类"
-              rules={[{ required: true, message: "请选择分类" }]}
-            >
-              <FormCascader
-                options={options}
-                categoryVisible={categoryVisible}
-                setCategoryVisible={(visible: boolean) =>
-                  setCategoryVisible(visible)
-                }
-              />
+            <Form.Item name="category" label="分类" rules={[{ required: true, message: '请选择分类' }]}>
+              <FormCascader options={options} categoryVisible={categoryVisible} setCategoryVisible={(visible: boolean) => setCategoryVisible(visible)} />
             </Form.Item>
 
-            <Form.Item
-              name="amount"
-              label="金额"
-              rules={[{ required: true, message: "金额不能为空" }]}
-            >
+            <Form.Item name="amount" label="金额" rules={[{ required: true, message: '金额不能为空' }]}>
               <Input placeholder="请输入金额" type="number" />
             </Form.Item>
           </Form>
@@ -121,37 +104,23 @@ export default function App() {
 const FormCascader: React.FC<{
   value?: string[];
   onChange?: (value: unknown) => void;
-  options: ICategoryRes["options"];
+  options: ICategoryRes['options'];
   categoryVisible: boolean;
   setCategoryVisible: (visiable: boolean) => void;
 }> = (props) => {
-  const {
-    value,
-    onChange = () => {},
-    options,
-    categoryVisible,
-    setCategoryVisible,
-  } = props;
+  const { value, onChange = () => {}, options, categoryVisible, setCategoryVisible } = props;
   console.log(value);
   return (
     <div onClick={() => setCategoryVisible(true)}>
       <div>{getLabelsFromValue(options, value)}</div>
-      <Cascader
-        options={options}
-        visible={categoryVisible}
-        onClose={() => setCategoryVisible(false)}
-        onConfirm={(value) => onChange(value)}
-      />
+      <Cascader options={options} visible={categoryVisible} onClose={() => setCategoryVisible(false)} onConfirm={(value) => onChange(value)} />
     </div>
   );
 };
 
-const getLabelsFromValue = (
-  options: ICategoryRes["options"],
-  value?: string[]
-) => {
+const getLabelsFromValue = (options: ICategoryRes['options'], value?: string[]) => {
   if (!value) {
-    return "请选择类别";
+    return '请选择类别';
   }
   const labels = [];
   let currentOptions = options;
@@ -166,5 +135,5 @@ const getLabelsFromValue = (
     }
   }
 
-  return labels[labels.length - 1] || "请选择类别";
+  return labels[labels.length - 1] || '请选择类别';
 };

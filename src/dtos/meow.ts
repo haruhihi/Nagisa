@@ -12,9 +12,9 @@ export interface ICategoryRes {
 }
 
 export interface ITransactionCreateReq {
-  categoryId: number;
-  amount: number;
-  description?: string;
+  categoryId: Transaction["categoryId"];
+  amount: Transaction["amount"];
+  description?: Transaction["description"];
 }
 
 export interface ITransactionCreateRes {
@@ -27,4 +27,8 @@ export interface ITransactionSearchRes {
       category: true;
     };
   }>[];
+}
+
+export interface ITransactionDeleteReq {
+  ids: Transaction["id"][];
 }

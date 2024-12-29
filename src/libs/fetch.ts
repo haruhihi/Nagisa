@@ -20,8 +20,14 @@ export const success = <T extends object>(data: T) => {
   });
 };
 
-export const fail = (errorMsg: string) => {
-  return new Response(JSON.stringify({ result: `error: ${errorMsg}` }), {
+export const fail = (err: unknown) => {
+  let msg = 'unknown error'
+  if (err instanceof Error) {
+    msg = err.message
+  } else if (typeof err === 'string') {
+    msg = err
+  }
+  return new Response(JSON.stringify({ result: `error: ${msg}` }), {
     status: 500,
   });
 };
