@@ -1,11 +1,10 @@
-import { prisma } from "@libs/prisma";
-import { ITransactionCreateRes, ITransactionCreateReq } from "@dtos/meow";
-import { success } from "@libs/fetch";
+import { prisma } from '@libs/prisma';
+import { ITransactionCreateRes, ITransactionCreateReq } from '@dtos/meow';
+import { success, fail } from '@libs/fetch';
 
 export async function POST(request: Request) {
   try {
-    const { categoryId, amount, description } =
-      (await request.json()) as ITransactionCreateReq;
+    const { categoryId, amount, description } = (await request.json()) as ITransactionCreateReq;
 
     const newTransaction = await prisma.transaction.create({
       data: {
@@ -21,12 +20,6 @@ export async function POST(request: Request) {
       transaction: newTransaction,
     });
   } catch (error) {
-    console.log("err", error);
-    return new Response(
-      JSON.stringify({ result: `error: ${(error as Error)?.message ?? ""}` }),
-      {
-        status: 500,
-      }
-    );
+    return fail(error);
   }
 }

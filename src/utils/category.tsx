@@ -2,19 +2,29 @@ import { useEffect, useState } from 'react';
 import { post } from '@libs/fetch';
 import { ICategoryRes, ITransactionSearchRes } from '@dtos/meow';
 import { CascaderOption } from 'antd-mobile';
+import { useRefresh } from './tool';
 
 export const useCategories = () => {
   const [res, setRes] = useState<ICategoryRes>();
+  const { refreshSignal, refresh } = useRefresh();
 
   useEffect(() => {
     async function fetchCategory() {
-      const res = await post<null, ICategoryRes>('/api/category');
+      const res = await post<null, ICategoryRes>('/api/category/search');
       setRes(res);
     }
     fetchCategory();
-  }, []);
+  }, [refreshSignal]);
 
-  return res;
+  return res
+    ? {
+        ...res,
+        reQuery: () => {
+          setRes(undefined);
+          refresh();
+        },
+      }
+    : undefined;
 };
 
 export const getCategoryFromValue = (value: string, categories?: ICategoryRes['categories']) => {
@@ -28,12 +38,12 @@ export const getCategoryOptions = (categories: ICategoryRes['categories']) => {
     return categories
       .filter((category) => category.parentId === parentId)
       .map((category) => {
-        const children = buildCategoryTree(categories, category.id)
+        const children = buildCategoryTree(categories, category.id);
         return {
           value: String(category.id),
           label: category.name,
           children: children.length ? children : undefined,
-        }
+        };
       });
   };
 

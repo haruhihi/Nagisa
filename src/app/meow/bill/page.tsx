@@ -1,12 +1,13 @@
 'use client';
-import { FloatingBubble, Cascader, Modal, Form, Button, Input, List, SwipeAction, SpinLoading, CascaderOption } from 'antd-mobile';
+import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, SpinLoading } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { HandPayCircleOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
-import { useTransactions } from '@/utils/transaction';
+import { useTransactions } from '@utils/transaction';
 import { useCategories, getCategoryOptions } from '@utils/category';
-import { ITransactionCreateReq, ITransactionCreateRes } from '@/dtos/meow';
+import { ITransactionCreateReq, ITransactionCreateRes } from '@dtos/meow';
 import { post } from '@libs/fetch';
+import { FormCascader } from '@components/form-cascader';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
@@ -22,7 +23,7 @@ export default function App() {
   if (!categoryRes || transactions === undefined) {
     return <SpinLoading style={{ '--size': '48px' }} color="primary" />;
   }
-  categoryRes;
+
   const cascaderOptions = getCategoryOptions(categoryRes.categories);
 
   return (
@@ -101,40 +102,3 @@ export default function App() {
     </div>
   );
 }
-
-const FormCascader: React.FC<{
-  value?: string[];
-  onChange?: (value: unknown) => void;
-  options: CascaderOption[];
-  categoryVisible: boolean;
-  setCategoryVisible: (visiable: boolean) => void;
-}> = (props) => {
-  const { value, onChange = () => {}, options, categoryVisible, setCategoryVisible } = props;
-  console.log(value);
-  return (
-    <div onClick={() => setCategoryVisible(true)}>
-      <div>{getLabelsFromValue(options, value)}</div>
-      <Cascader options={options} visible={categoryVisible} onClose={() => setCategoryVisible(false)} onConfirm={(value) => onChange(value)} />
-    </div>
-  );
-};
-
-const getLabelsFromValue = (options: CascaderOption[], value?: string[]) => {
-  if (!value) {
-    return '请选择类别';
-  }
-  const labels = [];
-  let currentOptions = options;
-
-  for (const val of value) {
-    const option = currentOptions.find((opt) => opt.value === val);
-    if (option) {
-      labels.push(option.label);
-      currentOptions = option.children || [];
-    } else {
-      break;
-    }
-  }
-
-  return labels[labels.length - 1] || '请选择类别';
-};

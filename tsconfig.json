@@ -18,10 +18,10 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./src/*"],
       "@libs/*": ["./src/libs/*"],
       "@dtos/*": ["./src/dtos/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@components/*": ["./src/components/*"],
     },
     "target": "ES2017"
   },

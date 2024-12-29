@@ -1,4 +1,4 @@
-import { Transaction } from '@prisma/client';
+import { Category, Transaction } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
 export interface ICategoryRes {
@@ -8,6 +8,15 @@ export interface ICategoryRes {
       children: true;
     };
   }>[];
+}
+
+export interface ICategoryCreateReq {
+  parentId: Category['parentId'];
+  name: Category['name'];
+}
+
+export interface ICategoryCreateRes {
+  category: Category;
 }
 
 export interface ITransactionCreateReq {

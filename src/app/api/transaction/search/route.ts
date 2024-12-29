@@ -1,6 +1,6 @@
 import { prisma } from "@libs/prisma";
 import { ITransactionSearchRes } from "@dtos/meow";
-import { success } from "@libs/fetch";
+import { success, fail } from "@libs/fetch";
 
 export async function POST() {
   try {
@@ -17,12 +17,6 @@ export async function POST() {
       transactions,
     });
   } catch (error) {
-    console.log("err", error);
-    return new Response(
-      JSON.stringify({ result: `error: ${(error as Error)?.message ?? ""}` }),
-      {
-        status: 500,
-      }
-    );
+    return fail(error)
   }
 }

@@ -1,6 +1,6 @@
-import { prisma, Category } from '@libs/prisma';
+import { prisma } from '@libs/prisma';
 import { ICategoryRes } from '@dtos/meow';
-import { success } from '@libs/fetch';
+import { success, fail } from '@libs/fetch';
 
 export async function POST() {
   try {
@@ -13,9 +13,6 @@ export async function POST() {
 
     return success<ICategoryRes>({ categories });
   } catch (error) {
-    console.log('err', error);
-    return new Response(JSON.stringify({ result: `error: ${(error as Error)?.message ?? ''}` }), {
-      status: 500,
-    });
+    return fail(error);
   }
 }
