@@ -1,20 +1,19 @@
-import { Transaction } from "@prisma/client";
-import { Prisma } from "@prisma/client";
-
-interface CategoryOption {
-  label: string;
-  value: string;
-  children?: CategoryOption[];
-}
+import { Transaction } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 export interface ICategoryRes {
-  options: CategoryOption[];
+  categories: Prisma.CategoryGetPayload<{
+    include: {
+      parent: true;
+      children: true;
+    };
+  }>[];
 }
 
 export interface ITransactionCreateReq {
-  categoryId: Transaction["categoryId"];
-  amount: Transaction["amount"];
-  description?: Transaction["description"];
+  categoryId: Transaction['categoryId'];
+  amount: Transaction['amount'];
+  description?: Transaction['description'];
 }
 
 export interface ITransactionCreateRes {
@@ -30,5 +29,5 @@ export interface ITransactionSearchRes {
 }
 
 export interface ITransactionDeleteReq {
-  ids: Transaction["id"][];
+  ids: Transaction['id'][];
 }

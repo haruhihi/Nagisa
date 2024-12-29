@@ -16,21 +16,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@libs/*": [
-        "./src/libs/*"
-      ],
-      "@dtos/*": [
-        "./src/dtos/*"
-      ]
+      "@/*": ["./src/*"],
+      "@libs/*": ["./src/libs/*"],
+      "@dtos/*": ["./src/dtos/*"],
+      "@utils/*": ["./src/utils/*"]
     },
     "target": "ES2017"
   },
