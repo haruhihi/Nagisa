@@ -25,3 +25,8 @@ body {
     text-wrap: balance;
   }
 }
+
+html, body {
+  overflow: hidden; /* 禁止滚动 */
+  overscroll-behavior: none; /* 禁止滚动时的弹性 */
+}

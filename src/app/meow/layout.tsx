@@ -34,7 +34,7 @@ const Bottom: FC = () => {
   ];
 
   return (
-    <TabBar activeKey={pathname} onChange={(value) => router.push(value)} safeArea>
+    <TabBar activeKey={pathname} onChange={(value) => router.push(value)} safeArea className={styles.tabBarWrap}>
       {tabs.map((item) => (
         <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
       ))}
