@@ -16,6 +16,7 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
+  account   String   @unique
   nickname  String // User's nickname
   password  String
   createdAt DateTime @default(now())

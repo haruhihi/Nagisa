@@ -1,4 +1,4 @@
-import { Category, Transaction } from '@prisma/client';
+import { Category, Transaction, User } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
 export interface ICategoryRes {
@@ -39,4 +39,14 @@ export interface ITransactionSearchRes {
 
 export interface ITransactionDeleteReq {
   ids: Transaction['id'][];
+}
+
+export interface ISignReq {
+  account: string;
+  password: string;
+  nickname?: string;
+}
+
+export interface IUserInfoRes {
+  user: User;
 }

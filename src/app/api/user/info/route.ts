@@ -1,5 +1,4 @@
 import { prisma } from '@libs/prisma';
-import { ITransactionSearchRes } from '@dtos/meow';
 import { success, fail } from '@libs/fetch';
 import { getSession } from '@libs/session';
 
@@ -11,18 +10,11 @@ export async function POST() {
       throw new Error(`User not found:${userId}`);
     }
 
-    const transactions = await prisma.transaction.findMany({
-      where: {
-        userId: Number(userId),
-      },
-      include: {
-        category: true,
-      },
+    const user = await prisma.user.findUnique({
+      where: { id: Number(userId) },
     });
 
-    return success<ITransactionSearchRes>({
-      transactions,
-    });
+    return success({ user });
   } catch (error) {
     return fail(error);
   }

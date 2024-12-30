@@ -1,9 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { Button } from 'antd-mobile';
+import { useRouter } from 'next/navigation';
+import { useUserInfo } from '@utils/user';
 
 export default function App() {
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
+  const router = useRouter();
+
+  const userInfo = useUserInfo();
 
   useEffect(() => {
     setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream);
@@ -34,6 +40,13 @@ export default function App() {
           .
         </p>
       )}
+      -------------
+      <h3>User Info</h3>
+      <p>{userInfo?.user?.account}</p>
+      <p>{userInfo?.user?.nickname}</p>
+      <Button block color="primary" size="large" onClick={() => router.push('/user/sign')}>
+        切换账号
+      </Button>
     </div>
   );
 }

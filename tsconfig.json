@@ -20,6 +20,7 @@
     "paths": {
       "@libs/*": ["./src/libs/*"],
       "@dtos/*": ["./src/dtos/*"],
+      "@app/*": ["./src/app/*"],
       "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
     },
