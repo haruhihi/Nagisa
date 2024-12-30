@@ -1,11 +1,12 @@
 'use client';
-import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, SpinLoading } from 'antd-mobile';
+import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction } from 'antd-mobile';
 import { AddCircleOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
 import { getCategoryOptions, useCategories } from '@utils/category';
 import { ICategoryCreateReq, ICategoryCreateRes } from '@dtos/meow';
 import { post } from '@libs/fetch';
 import { FormCascader } from '@components/form-cascader';
+import { TopLoading } from '@components/loading';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
@@ -17,7 +18,7 @@ export default function App() {
   };
 
   if (!categoryRes) {
-    return <SpinLoading style={{ '--size': '48px' }} color="primary" />;
+    return <TopLoading />;
   }
   const cascaderOptions = getCategoryOptions(categoryRes.categories);
 

@@ -1,5 +1,5 @@
 'use client';
-import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, SpinLoading } from 'antd-mobile';
+import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, Empty } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { HandPayCircleOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
@@ -8,6 +8,7 @@ import { useCategories, getCategoryOptions } from '@utils/category';
 import { ITransactionCreateReq, ITransactionCreateRes } from '@dtos/meow';
 import { post } from '@libs/fetch';
 import { FormCascader } from '@components/form-cascader';
+import { TopLoading } from '@components/loading';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
@@ -21,37 +22,41 @@ export default function App() {
   };
 
   if (!categoryRes || transactions === undefined) {
-    return <SpinLoading style={{ '--size': '48px' }} color="primary" />;
+    return <TopLoading />;
   }
 
   const cascaderOptions = getCategoryOptions(categoryRes.categories);
 
   return (
     <div>
-      <List>
-        {(transactions ?? []).map((transaction) => (
-          <SwipeAction
-            key={transaction.id}
-            rightActions={[
-              {
-                key: 'unsubscribe',
-                text: '删除',
-                color: 'red',
-                onClick: async () => {
-                  await post('/api/transaction/delete', { ids: [transaction.id] });
-                  reQuery();
+      {transactions.length > 0 ? (
+        <List>
+          {(transactions ?? []).map((transaction) => (
+            <SwipeAction
+              key={transaction.id}
+              rightActions={[
+                {
+                  key: 'unsubscribe',
+                  text: '删除',
+                  color: 'red',
+                  onClick: async () => {
+                    await post('/api/transaction/delete', { ids: [transaction.id] });
+                    reQuery();
+                  },
                 },
-              },
-            ]}
-          >
-            <List.Item key={transaction.id} description={dayjs(transaction.createdAt).format('YYYY-MM-DD')}>
-              <div>
-                {transaction.category.name}: {transaction.amount}
-              </div>
-            </List.Item>
-          </SwipeAction>
-        ))}
-      </List>
+              ]}
+            >
+              <List.Item key={transaction.id} description={dayjs(transaction.createdAt).format('YYYY-MM-DD')}>
+                <div>
+                  {transaction.category.name}: {transaction.amount}
+                </div>
+              </List.Item>
+            </SwipeAction>
+          ))}
+        </List>
+      ) : (
+        <Empty style={{ padding: '64px 0' }} imageStyle={{ width: 128 }} description="暂无数据" />
+      )}
       <FloatingBubble
         style={{
           '--initial-position-bottom': '100px',
