@@ -1,5 +1,5 @@
 'use client';
-import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, Empty, Toast } from 'antd-mobile';
+import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, Empty, Toast, InfiniteScroll } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { HandPayCircleOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
@@ -14,7 +14,7 @@ export default function App() {
   const [visible, setVisible] = useState(false);
   const [categoryVisible, setCategoryVisible] = useState(false);
   const categoryRes = useCategories();
-  const { transactions, reQuery } = useTransactions();
+  const { transactions, reQuery, loadMore, hasMore } = useTransactions();
 
   const onClick = () => {
     setVisible(true);
@@ -30,33 +30,36 @@ export default function App() {
   return (
     <div>
       {transactions.length > 0 ? (
-        <List>
-          {(transactions ?? []).map((transaction) => (
-            <SwipeAction
-              key={transaction.id}
-              rightActions={[
-                {
-                  key: 'unsubscribe',
-                  text: '删除',
-                  color: 'red',
-                  onClick: async () => {
-                    await post('/api/transaction/delete', { ids: [transaction.id] });
-                    Toast.show({
-                      content: '删除成功',
-                      afterClose: () => reQuery(),
-                    });
+        <div>
+          <List>
+            {(transactions ?? []).map((transaction) => (
+              <SwipeAction
+                key={transaction.id}
+                rightActions={[
+                  {
+                    key: 'unsubscribe',
+                    text: '删除',
+                    color: 'red',
+                    onClick: async () => {
+                      await post('/api/transaction/delete', { ids: [transaction.id] });
+                      Toast.show({
+                        content: '删除成功',
+                        afterClose: () => reQuery(),
+                      });
+                    },
                   },
-                },
-              ]}
-            >
-              <List.Item key={transaction.id} description={dayjs(transaction.createdAt).format('YYYY-MM-DD')}>
-                <div>
-                  {transaction.category.name}: {transaction.amount}
-                </div>
-              </List.Item>
-            </SwipeAction>
-          ))}
-        </List>
+                ]}
+              >
+                <List.Item key={transaction.id} description={dayjs(transaction.createdAt).format('YYYY-MM-DD')}>
+                  <div>
+                    {transaction.category.name}: {transaction.amount}
+                  </div>
+                </List.Item>
+              </SwipeAction>
+            ))}
+          </List>
+          <InfiniteScroll loadMore={loadMore} hasMore={hasMore} threshold={0} />
+        </div>
       ) : (
         <Empty style={{ padding: '64px 0' }} imageStyle={{ width: 128 }} description="暂无数据" />
       )}

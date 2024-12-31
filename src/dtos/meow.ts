@@ -37,6 +37,11 @@ export interface ITransactionSearchRes {
   }>[];
 }
 
+export interface ITransactionSearchReq {
+  page: number;
+  pageSize: number;
+}
+
 export interface ITransactionDeleteReq {
   ids: Transaction['id'][];
 }
