@@ -38,7 +38,8 @@ const Bottom: FC = () => {
   }
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_NODE_ENV !== 'development' && (window as any).eruda) {
+    console.log('window as any).eruda', (window as any).eruda);
+    if ((window as any).eruda) {
       (window as any).eruda.init();
     }
   }, []);

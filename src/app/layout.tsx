@@ -26,8 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
-      <Script src="https://cdn.jsdelivr.net/npm/eruda" />
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {children}
+        <Script src="https://cdn.jsdelivr.net/npm/eruda" strategy="beforeInteractive" />
+      </body>
     </html>
   );
 }

@@ -11,6 +11,7 @@
     "view": "prisma studio"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.5.2",
     "@prisma/client": "^6.1.0",
     "antd-mobile": "^5.38.1",
     "dayjs": "^1.11.13",
