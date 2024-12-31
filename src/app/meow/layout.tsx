@@ -1,10 +1,9 @@
 'use client';
 import { useRouter, usePathname } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { FC } from 'react';
 import { TabBar } from 'antd-mobile';
 import { HistogramOutline, EditSOutline, UnorderedListOutline, UserOutline } from 'antd-mobile-icons';
-
 import styles from './index.module.scss';
 import { useUserInfo } from '@utils/user';
 
@@ -37,6 +36,12 @@ const Bottom: FC = () => {
       icon: <UnorderedListOutline />,
     });
   }
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_NODE_ENV !== 'development' && (window as any).eruda) {
+      (window as any).eruda.init();
+    }
+  }, []);
 
   return (
     <TabBar activeKey={pathname} onChange={(value) => router.push(value)} safeArea className={styles.tabBarWrap}>

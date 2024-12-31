@@ -21,6 +21,9 @@ const nextConfig = {
     // experimental: {
     //   serverComponentsExternalPackages: ["sequelize"],
     // },
+    env: {
+      NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
+    },
   };
   
   export default nextConfig;
