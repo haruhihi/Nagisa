@@ -14,11 +14,6 @@
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 @layer utilities {
   .text-balance {
@@ -29,4 +24,11 @@ body {
 html, body {
   overflow: hidden; /* 禁止滚动 */
   overscroll-behavior: none; /* 禁止滚动时的弹性 */
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100vh;
 }

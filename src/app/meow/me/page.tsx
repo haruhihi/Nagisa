@@ -17,10 +17,6 @@ export default function App() {
     setIsStandalone(window.matchMedia('(display-mode: standalone)').matches);
   }, []);
 
-  if (isStandalone) {
-    return null; // Don't show install button if already installed
-  }
-
   return (
     <div>
       {isStandalone ? null : (

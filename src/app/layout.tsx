@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Script from 'next/script';
 import './globals.css';
+import type { Viewport } from 'next';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -19,6 +20,12 @@ export const metadata: Metadata = {
   description: 'HH',
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,6 +35,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+                // 这段 JavaScript 会在页面加载之前执行
+                console.log('Setting body height: ' + document.documentElement.clientHeight + 'px')
+                document.body.style.height = document.documentElement.clientHeight + 'px';
+                // 你可以添加其他初始化脚本
+              `,
+          }}
+        />
         <Script src="https://cdn.jsdelivr.net/npm/eruda" strategy="beforeInteractive" />
       </body>
     </html>
