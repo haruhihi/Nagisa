@@ -3,18 +3,20 @@ import { useRouter, usePathname } from 'next/navigation';
 import React from 'react';
 import type { FC } from 'react';
 import { TabBar } from 'antd-mobile';
-import { HistogramOutline, MessageOutline, UnorderedListOutline, UserOutline } from 'antd-mobile-icons';
+import { HistogramOutline, EditSOutline, UnorderedListOutline, UserOutline } from 'antd-mobile-icons';
 
 import styles from './index.module.scss';
+import { useUserInfo } from '@utils/user';
 
 const Bottom: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useUserInfo();
   const tabs = [
     {
-      key: '/meow/category',
-      title: '类别',
-      icon: <UnorderedListOutline />,
+      key: '/meow/trek',
+      title: '信笺',
+      icon: <EditSOutline />,
     },
     {
       key: '/meow/bill',
@@ -22,16 +24,19 @@ const Bottom: FC = () => {
       icon: <HistogramOutline />,
     },
     {
-      key: '/meow/time-machine',
-      title: '时光机',
-      icon: <MessageOutline />,
-    },
-    {
       key: '/meow/me',
       title: '我的',
       icon: <UserOutline />,
     },
   ];
+
+  if (user && [1, 2].includes(user.id)) {
+    tabs.unshift({
+      key: '/meow/category',
+      title: '类别',
+      icon: <UnorderedListOutline />,
+    });
+  }
 
   return (
     <TabBar activeKey={pathname} onChange={(value) => router.push(value)} safeArea className={styles.tabBarWrap}>

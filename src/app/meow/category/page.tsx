@@ -1,5 +1,5 @@
 'use client';
-import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction } from 'antd-mobile';
+import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, Toast } from 'antd-mobile';
 import { AddCircleOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
 import { getCategoryOptions, useCategories } from '@utils/category';
@@ -77,9 +77,14 @@ export default function App() {
                 name,
                 parentId: Number(parent[parent.length - 1]),
               });
-              reQuery();
-              setVisible(false);
-              console.log(res);
+              Toast.show({
+                content: '添加成功',
+                afterClose: () => {
+                  reQuery();
+                  setVisible(false);
+                  console.log(res);
+                },
+              });
             }}
           >
             <Form.Item name="parent" label="父级" rules={[{ required: true, message: '请选择父级' }]}>

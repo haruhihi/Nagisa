@@ -1,5 +1,5 @@
 'use client';
-import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, Empty } from 'antd-mobile';
+import { FloatingBubble, Modal, Form, Button, Input, List, SwipeAction, Empty, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { HandPayCircleOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
@@ -41,7 +41,10 @@ export default function App() {
                   color: 'red',
                   onClick: async () => {
                     await post('/api/transaction/delete', { ids: [transaction.id] });
-                    reQuery();
+                    Toast.show({
+                      content: '删除成功',
+                      afterClose: () => reQuery(),
+                    });
                   },
                 },
               ]}
@@ -89,9 +92,14 @@ export default function App() {
                 amount: Number(amount),
                 categoryId: Number(category[category.length - 1]),
               });
-              setVisible(false);
-              reQuery();
-              console.log(res);
+              Toast.show({
+                content: '记录成功',
+                afterClose: () => {
+                  setVisible(false);
+                  reQuery();
+                  console.log(res);
+                },
+              });
             }}
           >
             <Form.Item name="category" label="分类" rules={[{ required: true, message: '请选择分类' }]}>

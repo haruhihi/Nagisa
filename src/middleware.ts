@@ -23,7 +23,7 @@ export default async function middleware(req: NextRequest) {
   if (!session || !session?.userId) {
     return NextResponse.redirect(new URL('/user/sign', req.nextUrl));
   }
-  console.log('session', session);
+  // console.log('session', session);
 
   // 5. Redirect to /dashboard if the user is authenticated
   //   if (

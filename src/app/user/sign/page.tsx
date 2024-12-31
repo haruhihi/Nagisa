@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { post } from '@libs/fetch';
-import { Form, Input, Button } from 'antd-mobile';
+import { Form, Input, Button, Toast } from 'antd-mobile';
 
 export default function App() {
   const router = useRouter();
@@ -12,7 +12,10 @@ export default function App() {
       <Form
         onFinish={async (values) => {
           await post('/api/user/sign', values);
-          router.push('/');
+          Toast.show({
+            content: '登录成功',
+            afterClose: () => router.push('/'),
+          });
         }}
       >
         <Form.Item label="账号" name="account" required>
