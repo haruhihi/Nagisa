@@ -22,7 +22,7 @@
     border-top: solid 1px var(--adm-color-border);
     .tabBarWrap {
       :global(.adm-safe-area) {
-        height: calc(env(safe-area-inset-bottom) * var(--multiple));
+        padding-bottom: env(safe-area-inset-bottom);
       }
     }
   }
