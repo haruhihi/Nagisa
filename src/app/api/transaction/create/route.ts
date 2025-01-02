@@ -5,7 +5,7 @@ import { getSession } from '@libs/session';
 
 export async function POST(request: Request) {
   try {
-    const { categoryId, amount, description } = (await request.json()) as ITransactionCreateReq;
+    const { categoryId, amount, date, description } = (await request.json()) as ITransactionCreateReq;
     const userId = (await getSession())?.userId;
 
     if (!userId) {
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         categoryId: categoryId,
         amount,
         description,
-        date: new Date(),
+        date: new Date(date),
       },
     });
 

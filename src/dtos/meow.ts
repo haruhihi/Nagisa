@@ -23,6 +23,7 @@ export interface ITransactionCreateReq {
   categoryId: Transaction['categoryId'];
   amount: Transaction['amount'];
   description?: Transaction['description'];
+  date: number;
 }
 
 export interface ITransactionCreateRes {

@@ -10,10 +10,12 @@ import {
   Empty,
   Toast,
   InfiniteScroll,
+  DatePicker,
+  DatePickerRef,
 } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { HandPayCircleOutline } from 'antd-mobile-icons';
-import { useState } from 'react';
+import { RefObject, useState } from 'react';
 import { useTransactions } from '@utils/transaction';
 import { useCategories, getCategoryOptions, getIconFromCategoryId } from '@utils/category';
 import { ITransactionCreateReq, ITransactionCreateRes } from '@dtos/meow';
@@ -46,6 +48,7 @@ export default function App() {
             {(transactions ?? []).map((transaction) => {
               3;
               const Icon = getIconFromCategoryId(transaction.category.id);
+              const { description } = transaction;
               return (
                 <SwipeAction
                   key={transaction.id}
@@ -67,11 +70,11 @@ export default function App() {
                   <List.Item
                     key={transaction.id}
                     prefix={<Icon style={{ fontSize: '24px', color: '#1677ff' }} />}
-                    description={`${dayjs(transaction.createdAt).format('YYYY-MM-DD HH:mm')}  ${
-                      transaction.category.name
-                    }`}
+                    description={`${dayjs(transaction.date).format('YYYY-MM-DD HH:mm')}  ${transaction.category.name}`}
                   >
-                    <div>{transaction.amount}元</div>
+                    <div>
+                      {transaction.amount}元{description ? `- (${description})` : ''}
+                    </div>
                   </List.Item>
                 </SwipeAction>
               );
@@ -106,13 +109,16 @@ export default function App() {
                 提交
               </Button>
             }
+            initialValues={{ time: new Date() }}
             style={{ marginTop: '20px' }}
-            onFinish={async (values: { amount: string; category: string[] }) => {
+            onFinish={async (values: { amount: string; category: string[]; time: Date; description?: string }) => {
               if (!values) return console.log('values is empty');
-              const { amount, category } = values;
+              const { amount, category, time, description } = values;
               const res = await post<ITransactionCreateReq, ITransactionCreateRes>('/api/transaction/create', {
                 amount: Number(amount),
                 categoryId: Number(category[category.length - 1]),
+                date: dayjs(time).unix() * 1000,
+                description,
               });
               Toast.show({
                 content: '记录成功',
@@ -132,8 +138,25 @@ export default function App() {
               />
             </Form.Item>
 
+            <Form.Item
+              name="time"
+              label="时间"
+              trigger="onConfirm"
+              onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {
+                datePickerRef.current?.open();
+              }}
+            >
+              <DatePicker precision="minute">
+                {(value) => (value ? dayjs(value).format('YYYY/MM/DD HH:mm') : '请选择日期')}
+              </DatePicker>
+            </Form.Item>
+
             <Form.Item name="amount" label="金额" rules={[{ required: true, message: '金额不能为空' }]}>
               <Input placeholder="请输入金额" type="number" />
+            </Form.Item>
+
+            <Form.Item name="description" label="备注">
+              <Input placeholder="请输入备注" type="string" />
             </Form.Item>
           </Form>
         }
