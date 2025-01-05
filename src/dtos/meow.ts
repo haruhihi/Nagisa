@@ -1,4 +1,4 @@
-import { Category, Transaction, User } from '@prisma/client';
+import { Category, Transaction, Trek, User } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
 export interface ICategoryRes {
@@ -8,6 +8,10 @@ export interface ICategoryRes {
       children: true;
     };
   }>[];
+}
+
+export interface ITrekSearchRes {
+  treks: Trek[];
 }
 
 export interface ICategoryCreateReq {
@@ -55,4 +59,14 @@ export interface ISignReq {
 
 export interface IUserInfoRes {
   user: User;
+}
+
+export interface ITrekCreateReq {
+  date: number;
+  count: Trek['count'];
+  type: string;
+}
+
+export interface ITrekCreateRes {
+  trek: Trek;
 }

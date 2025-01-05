@@ -14,7 +14,7 @@ const Bottom: FC = () => {
   const tabs = [
     {
       key: '/meow/trek',
-      title: '信笺',
+      title: '打卡',
       icon: <EditSOutline />,
     },
     {

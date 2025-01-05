@@ -14,7 +14,11 @@ const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: SessionPayload) {
-  return new SignJWT(payload).setProtectedHeader({ alg: 'HS256' }).setIssuedAt().setExpirationTime(`${expireDays}d`).sign(encodedKey);
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime(`${expireDays}d`)
+    .sign(encodedKey);
 }
 
 export async function decrypt(session: string | undefined = '') {
@@ -46,4 +50,10 @@ export async function getSession() {
   const cookie = (await cookies()).get('session')?.value;
   const session = await decrypt(cookie);
   return session;
+}
+
+export async function getUID() {
+  const userId = (await getSession())?.userId;
+
+  return userId ? Number(userId) : null;
 }

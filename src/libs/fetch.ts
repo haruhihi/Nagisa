@@ -1,9 +1,6 @@
-export const post = async <T extends object | null, K extends object | null>(
-  url: string,
-  params?: T
-): Promise<K> => {
+export const post = async <T extends object | null, K extends object | null>(url: string, params?: T): Promise<K> => {
   const res = await fetch(url, {
-    method: "POST",
+    method: 'POST',
     body: params ? JSON.stringify(params) : undefined,
   });
   const data = await res.json();
@@ -21,11 +18,12 @@ export const success = <T extends object>(data: T) => {
 };
 
 export const fail = (err: unknown) => {
-  let msg = 'unknown error'
+  console.log(err);
+  let msg = 'unknown error';
   if (err instanceof Error) {
-    msg = err.message
+    msg = err.message;
   } else if (typeof err === 'string') {
-    msg = err
+    msg = err;
   }
   return new Response(JSON.stringify({ result: `error: ${msg}` }), {
     status: 500,

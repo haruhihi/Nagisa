@@ -8,12 +8,14 @@
     "start": "./node_modules/next/dist/bin/next start",
     "lint": "next lint",
     "update-db": "prisma migrate dev --name update && prisma generate",
-    "view": "prisma studio"
+    "view": "prisma studio",
+    "p": "prisma"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
     "@prisma/client": "^6.1.0",
     "antd-mobile": "^5.38.1",
+    "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "eruda": "^3.4.1",
     "jose": "^5.9.6",
