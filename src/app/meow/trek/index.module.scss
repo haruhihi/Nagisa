@@ -27,3 +27,9 @@
         color: #fff;
     }
 }
+
+.un-selected-bubble {
+    :global(.adm-floating-bubble-button) {
+        opacity: 0.6 !important;
+    }
+}
